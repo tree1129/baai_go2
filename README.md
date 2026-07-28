@@ -2,6 +2,12 @@
 
 Unitree Go2 + Livox MID360 的 ROS Noetic 三维定位与二维自主导航稳定版配置。
 
+
+<img width="4032" height="3024" alt="20260728-135047" src="https://github.com/user-attachments/assets/205d0204-85d7-4dc1-8fac-89b23b2354ac" />
+<img width="5712" height="4284" alt="20260728-135246" src="https://github.com/user-attachments/assets/f694b787-e93b-42ab-a095-e4030d31c71f" />
+
+
+
 ## 当前功能
 
 - FAST-LIO 实时点云与 Open3D PLY 全局定位
