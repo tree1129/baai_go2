@@ -1,0 +1,20 @@
+local_costmap:
+  global_frame: map
+  robot_base_frame: go2_link
+  update_frequency: 10.0
+  publish_frequency: 5.0
+  rolling_window: true
+  width: 4.0
+  height: 4.0
+  # 局部地图的分辨率（米/像素）
+  resolution: 0.1
+
+  # 变换容忍度
+  transform_tolerance: 0.5  # 0.5
+  inflation_layer:
+    enabled:              true
+    cost_scaling_factor:  5.0  # exponential rate at which the obstacle cost drops off (default: 10)
+    inflation_radius:     0.30  # max. distance from an obstacle at which costs are incurred for planning paths.
+  plugins:
+    - {name: obstacle_layer,  type: "costmap_2d::ObstacleLayer"}
+    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}

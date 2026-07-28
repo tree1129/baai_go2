@@ -1,0 +1,17 @@
+<launch>
+  <node name="octomap_projector" pkg="octomap_projector" type="octomap_projector" output="screen">
+    <!-- Project the static PLY map published by open3d_loc.  Do not build the
+         navigation map from the moving live LiDAR cloud. -->
+    <param name="pointcloud_topic" value="/map" />
+    <param name="map_topic" value="/map_grid" />
+    <param name="frame_id" value="map" />
+    <param name="resolution" value="0.05" />
+    <param name="z_min" value="0.1" />
+    <param name="z_max" value="1.0" />
+    <param name="leaf_size" value="0.1" />
+    <!-- The source is the static PLY, so cover the complete fixed 40 x 40 m
+         navigation grid instead of the old +/-2 m robot-centred crop. -->
+    <param name="filter_range_x" value="100.0" />
+    <param name="filter_range_y" value="100.0" />
+  </node>
+</launch>

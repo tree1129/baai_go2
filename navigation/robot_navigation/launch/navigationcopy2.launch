@@ -1,0 +1,76 @@
+<launch>
+
+  <!-- for simulation -->
+  <!-- <remap from="map" to="map_grid"/> -->
+
+  <!-- Arguments -->
+  <arg name="cmd_vel_topic" default="cmd_vel" />
+  <arg name="odom_topic" default="go_odom" />
+  <arg name="map_topic" default="map_grid" />
+  <arg name="scan_topic" default="laser_scan" />
+
+
+
+
+    <!-- 定义地图文件参数 -->
+  <!-- <arg name="map_file" value="mapnew.yaml" /> -->
+
+        <include file="$(find octomap_projector)/launch/projector.launch">
+
+      </include>
+
+
+        <include file="$(find pcl_to_laseerscan)/launch/pointcloud2laserscan.launch">
+
+      </include>
+
+  <!-- 发布栅格地图，但修改话题名称为/map_grid以避免冲突 -->
+  <!-- <node pkg="map_server" name="map_server" type="map_server" args="$(find ply_map)/map/$(arg map_file)">
+    <remap from="/map" to="/map_grid" />
+    <remap from="/map_metadata" to="/map_grid_metadata" />
+  </node> -->
+  <!-- /map_grid is a topic whose messages already use frame_id=map; it is not
+       a separate TF frame. -->
+  <!-- move_base use DWA planner-->
+
+   <!-- <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+      <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+      <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+      <rosparam file="$(find robot_navigation)/params/GO2/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find robot_navigation)/params/GO2/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find robot_navigation)/params/GO2/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find robot_navigation)/params/GO2/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find robot_navigation)/params/GO2/move_base_params.yaml" command="load" />
+      <rosparam file="$(find robot_navigation)/params/GO2/dwa_local_planner_params.yaml" command="load" />
+      <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+      <remap from="odom" to="$(arg odom_topic)"/>
+      <remap from="map" to="$(arg map_topic)"/>
+      <remap from="scan" to="$(arg scan_topic)"/>
+      <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
+      <param name="GlobalPlanner/use_dijkstra " value="$(arg use_dijkstra)" />
+    </node>  -->
+
+       <!-- move_base -->
+      <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+            <rosparam file="$(find robot_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+            <rosparam file="$(find robot_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+            <rosparam file="$(find robot_navigation)/config/local_costmap_params.yaml" command="load" />
+            <rosparam file="$(find robot_navigation)/config/global_costmap_params.yaml" command="load" />
+            <rosparam file="$(find robot_navigation)/config/teb_local_planner_params.yaml" command="load" />
+
+            <param name="base_global_planner" value="navfn/NavfnROS" />
+            <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+
+            <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+            <remap from="odom" to="$(arg odom_topic)"/>
+            <remap from="map" to="$(arg map_topic)"/>
+            <remap from="scan" to="$(arg scan_topic)"/>
+      </node>
+
+<!-- <node pkg="tf2_ros" type="static_transform_publisher" name="go2_link_go2laser_link" args="0 0 0 0 0 0 1 go2_link go2laser_link" /> -->
+
+    <!-- move_base -->
+
+
+
+</launch>

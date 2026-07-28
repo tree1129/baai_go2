@@ -1,0 +1,67 @@
+<launch>
+	<!-- localization -->
+	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_init2odom" args="0 0 0 0 0 0 1 odom camera_init" />
+	<node pkg="tf2_ros" type="static_transform_publisher" name="imulink2baselink" args="0 0 0 0 0 0 1 base_link imu_link" />
+	<node pkg="tf2_ros" type="static_transform_publisher" name="base_center_broadcaster" args="0 0 0 0 0 0 1 motion_link base_link" />
+
+	<node pkg="open3d_loc" type="global_localization_node" name="global_localization_node" output="screen">
+
+		<rosparam command="load" file="$(find open3d_loc)/config/loc_param_g1.yaml" />
+		<!-- <param name="path_map" type="string" value="$(find open3d_loc)/../data/map.ply" /> -->
+		<!-- <param name="path_map" type="string" value="$(find open3d_loc)/../data/BAAI_TEST_Final_2_mesh.ply" /> -->
+		<!-- <param name="path_map" type="string" value="$(find open3d_loc)/../data/only_mid360.ply" /> -->
+		<!-- ROS navigation is Z-up.  This copy preserves RGB while rotating the
+		     source Y-up map with x'=x, y'=-z, z'=y. -->
+		<param name="path_map" type="string" value="$(find open3d_loc)/../data/baai0723_21_32_58_zup.ply" />
+
+
+		<param name="pcd_queue_maxsize" type="int" value="10" />
+		<!-- <param name="voxelsize_coarse" type="double" value="0.15" />
+		<param name="voxelsize_fine" type="double" value="0.1" /> -->
+
+		<!-- 使用iPhone进行的点云地图构建 -->
+		<param name="voxelsize_coarse" type="double" value="0.01" />
+		<param name="voxelsize_fine" type="double" value="0.2" />
+
+		<!-- 定位配准阈值,超过这个值才更新odom2map -->
+		<param name="threshold_fitness" type="double" value="0.5" />
+
+		<!-- 初始化配准阈值,超过这个才能初始化成功 -->
+		<param name="threshold_fitness_init" type="double" value="0.5" />
+		<param name="loc_frequence" type="double" value="2.5" />
+		<param name="save_scan" type="bool" value="0"/>
+		<param name="hidden_removal" type="bool" value="0"/>
+		<param name="maxpoints_source" type="int" value="80000" />
+		<param name="maxpoints_target" type="int" value="400000" />
+
+		<!-- for odom2map -->
+		<param name="filter_odom2map" type="bool" value="0"/>
+		<param name="kalman_processVar2" type="double" value="0.001" />
+		<param name="kalman_estimatedMeasVar2" type="double" value="0.02" />
+
+		<!-- localization confidence threshold-->
+		<param name="confidence_loc_th" type="double" value="0.7" />
+
+		<!-- distance th for update current submap(target, history) -->
+		<param name="dis_updatemap" type="double" value="3.5" />
+	</node>
+
+	<node pkg="open3d_loc" type="pointcloud_transformer_node" name="pointcloud_transformer_node" output="screen">
+		<param name="input_topic" type="string" value="/cloud_registered_body_1" />
+		<param name="output_topic" type="string" value="/cloud_registered_map" />
+		<param name="global_map_topic" type="string" value="/global_map" />
+		<param name="source_frame" type="string" value="base_link" />
+		<param name="target_frame" type="string" value="map" />
+
+		<param name="voxel_leaf_size" type="double" value="0.1" />
+		<param name="map_voxel_leaf_size" type="double" value="0.2" />
+		<param name="max_global_points" type="int" value="1000000" />
+		<param name="map_publish_frequency" type="double" value="1.0" />
+		<param name="enable_global_map" type="bool" value="true" />
+	</node>
+
+	<param name="use_sim_time" value="false" />
+
+
+
+</launch>

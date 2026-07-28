@@ -1,0 +1,14 @@
+*.bag
+*.bag.active
+*.log
+*.pcd
+*.ply
+*.tar
+*.tar.gz
+build/
+devel/
+install/
+.catkin_tools/
+__pycache__/
+*.pyc
+.DS_Store
